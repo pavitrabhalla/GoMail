@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'tastypie',
+    'django_ses',    
     
     'api',
 )
@@ -55,6 +56,15 @@ ROOT_URLCONF = 'email_service.urls'
 
 WSGI_APPLICATION = 'email_service.wsgi.application'
 
+
+# Default Email Settings
+DEFAULT_FROM_EMAIL = 'pavitrabhalla@gmail.com'
+
+
+# AWS Credentials
+AWS_ACCESS_KEY_ID = "AKIAJ3RFPYCM3HSDJISA"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_SES_REGION = "us-east-1"
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
