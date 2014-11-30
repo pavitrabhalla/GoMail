@@ -2,6 +2,7 @@
 from django.shortcuts import render
 import email
 import mimetypes
+from tastypie.http import *
 from email import encoders
 from email.mime.audio import MIMEAudio
 from email.mime.image import MIMEImage
@@ -15,12 +16,17 @@ from boto.ses.connection import SESConnection
 from django.utils.html import strip_tags
 from django.template import loader
 from django.conf import settings
+import requests
+import traceback, sys, json
 
-def create_formatted_email_msg(subject, body, attachments):
+def create_formatted_email_msg(from_address, subject, body, attachments):
     m = MIMEMultipart() 
 
     #Email subject
     m['Subject'] = subject
+
+    #Email from address
+    m['From'] = from_address
 
     #Email text/html body
     part = MIMEText(body, 'html') 
@@ -59,12 +65,84 @@ def create_formatted_email_msg(subject, body, attachments):
         m.attach(msg)
     return m
 
+
 def send_email_aws(from_address, to_addresses, content):
     try:
         conn = boto.ses.connect_to_region(settings.AWS_SES_REGION, aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
     except:
         traceback.print_exc(file=sys.stdout)
+    try:
+        r = conn.send_raw_email(source=from_address, raw_message=content.as_string(), destinations=to_addresses)
+        return True
+    except:
+        traceback.print_exc(file=sys.stdout)
+        return False
 
-    r = conn.send_raw_email(source=from_address, raw_message=content.as_string(), destinations=to_addresses)
-    return True
+def send_email_mailgun(from_address, to_addresses, content):
+    to_addresses = ",".join(str(addr) for addr in to_addresses)
+    try:
+        requests.post(settings.MAILGUN_MIME_SEND_URL,
+            auth=("api", settings.MAILGUN_API_KEY),
+            data={"from": from_address,
+                    "to": to_addresses},
+                        files={"message": content.as_string()})
+        return True
+    except:
+        traceback.print_exc(file=sys.stdout)
+        return False
+
+def _send_email(request):
+    try:
+        data = json.loads(request.body)
+    except ValueError, e:
+        data = request.POST
+    except:
+        traceback.print_exc(file=sys.stdout)
+        return False, "Invalid request body", HttpBadRequest
+
+    try:
+        from_address = data.get('from_address')
+        to_addresses = data.get('to_addresses')
+        if to_addresses:
+            to_array = to_addresses.split(' ')
+        else:
+            return False, "Empty or invalid to_addresses", HttpForbidden
+
+        subject = data.get('subject')
+        body = data.get('body')
+    except:
+        traceback.print_exc(file=sys.stdout)
+
+    if request.FILES.items():
+        attachments = request.FILES.items()
+    else:
+        attachments = []
+
+    try:
+        print "Trying to send email via Amazon SES"
+        if not from_address:
+            from_email = settings.AWS_DEFAULT_FROM_EMAIL
+        else:
+            from_email = from_address
+        content = create_formatted_email_msg(from_email, subject, body, attachments)
+        email_sent = send_email_aws(from_email, to_array, content)
+        if not email_sent:
+            raise Exception()
+    except:
+        traceback.print_exc(file=sys.stdout)
+        print "Failing over to Mailgun service"
+        if not from_address:
+            from_email = settings.MAILGUN_DEFAULT_FROM_EMAIL
+        else:
+            from_email = from_address
+        try:
+            content = create_formatted_email_msg(from_email, subject, body, attachments)
+            email_sent = send_email_mailgun(from_email, to_array, content)
+        except:
+            traceback.print_exc(file=sys.stdout)
+            raise Exception("Both email services failed")
+    if email_sent:
+        return True, "Email sent to recipients", HttpCreated
+    else:
+        return False, "Internal Error in sending email", HttpForbidden
 
