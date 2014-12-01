@@ -13,9 +13,13 @@ class SendEmailTest(ResourceTestCase):
         self.default_from_address = 'randomSender@pbmail.service'
         self.to_addresses = 'pavitrabhalla@gmail.com pavitra@oceanleap.com'
         self.to_addresses_list = self.to_addresses
+
         self.subject = 'Testing email sending service'
+
         self.textbody = 'Hi, this is a plaintext message.'
         self.htmlbody = 'Hi, <br> This is a <b> HTML </b> formatted text.'
+        self.attachment_body = 'Hi, <br> This is a <b> HTML </b> formatted text. Please find attached files.'
+
         self.docFile = open(settings.TESTDATA_DIR+'dummy_doc.docx', 'rb')
         self.pdfFile = open(settings.TESTDATA_DIR+'dummy_pdf.pdf', 'rb')
         self.imgFile = open(settings.TESTDATA_DIR+'dummy_img.jpg', 'rb')
@@ -31,7 +35,7 @@ class SendEmailTest(ResourceTestCase):
                 'subject':self.subject,
                 'body':self.textbody,
                 }
-        #self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
+        self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
 
     def test_send_email_html_success_aws(self):
         post_data = {
@@ -40,14 +44,14 @@ class SendEmailTest(ResourceTestCase):
                 'subject':self.subject,
                 'body':self.htmlbody,
                 }
-        #self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
+        self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
 
     def test_send_email_attachments_success_aws(self):
         r = requests.post(self.send_email_api_url,
             data={"from_address": self.aws_verified_from_address,
                     "to_addresses": self.to_addresses,
                     "subject":self.subject,
-                    "body":self.htmlbody,
+                    "body":self.attachment_body,
                     "h: Content-Type":"multipart/form-data",
                     },
             files=self.attachments,

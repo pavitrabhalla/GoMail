@@ -19,7 +19,7 @@ from django.conf import settings
 import requests
 import traceback, sys, json
 
-def create_formatted_email_msg(from_address, subject, body, attachments):
+def create_formatted_mime(from_address, subject, body, attachments):
     m = MIMEMultipart() 
 
     #Email subject
@@ -33,8 +33,7 @@ def create_formatted_email_msg(from_address, subject, body, attachments):
     m.attach(part)
 
     #Attachments
-    for k,v in attachments:
-        attached_file = v
+    for filename,attached_file in attachments:
         ctype, encoding = mimetypes.guess_type(attached_file.name)
         if ctype is None or encoding is not None:
             # No guess could be made, or the file is encoded (compressed), so
@@ -61,7 +60,7 @@ def create_formatted_email_msg(from_address, subject, body, attachments):
             # Encode the payload using Base64
             encoders.encode_base64(msg)
             # Set the filename parameter
-        msg.add_header('Content-Disposition', 'attachment', filename=k)
+        msg.add_header('Content-Disposition', 'attachment', filename=filename)
         m.attach(msg)
     return m
 
@@ -80,7 +79,7 @@ def send_email_aws(from_address, to_addresses, content):
 
 def send_email_mailgun(from_address, to_addresses, subject, body, attachments):
     #to_addresses = ",".join(str(addr) for addr in to_addresses)
-    print to_addresses
+    print attachments
     try:
         return requests.post(settings.MAILGUN_SEND_URL,
             auth=("api", settings.MAILGUN_API_KEY),
@@ -130,7 +129,7 @@ def _send_email(request):
             from_email = settings.AWS_DEFAULT_FROM_EMAIL
         else:
             from_email = from_address
-        content = create_formatted_email_msg(from_email, subject, body, attachments)
+        content = create_formatted_mime(from_email, subject, body, attachments)
         email_sent = send_email_aws(from_email, to_array, content)
         if not email_sent:
             raise Exception()
