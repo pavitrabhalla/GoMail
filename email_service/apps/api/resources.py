@@ -15,6 +15,7 @@ class EmailResource(ModelResource):
 
     def send_email(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
+
         try:
             success, message, http_status_code = _send_email(request)
         except:

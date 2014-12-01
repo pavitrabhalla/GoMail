@@ -50,16 +50,16 @@ def create_formatted_email_msg(from_address, subject, body, attachments):
             msg = MIMEImage(attached_file.read(), _subtype=subtype)
 
         elif maintype == 'audio': 
-            msg = MIMEAudio(attched_file.read(), _subtype=subtype)
+            msg = MIMEAudio(attached_file.read(), _subtype=subtype)
 
         elif maintype == 'application':
             msg = MIMEApplication(attached_file.read(), _subtype=subtype)
 
         else: 
             msg = MIMEBase(maintype, subtype)
-            msg.set_payload(attached_file.read())
-            # Encode the payload using Base64
-            encoders.encode_base64(msg)
+        msg.set_payload(attached_file.read())
+        # Encode the payload using Base64
+        encoders.encode_base64(msg)
         # Set the filename parameter
         msg.add_header('Content-Disposition', 'attachment', filename=k)
         m.attach(msg)
@@ -78,15 +78,20 @@ def send_email_aws(from_address, to_addresses, content):
         traceback.print_exc(file=sys.stdout)
         return False
 
-def send_email_mailgun(from_address, to_addresses, content):
-    to_addresses = ",".join(str(addr) for addr in to_addresses)
+def send_email_mailgun(from_address, to_addresses, subject, body, attachments):
+    #to_addresses = ",".join(str(addr) for addr in to_addresses)
+    print to_addresses
     try:
-        requests.post(settings.MAILGUN_MIME_SEND_URL,
+        return requests.post(settings.MAILGUN_SEND_URL,
             auth=("api", settings.MAILGUN_API_KEY),
             data={"from": from_address,
-                    "to": to_addresses},
-                        files={"message": content.as_string()})
-        return True
+                    "to": to_addresses,
+                    "subject":subject,
+                    "html":body,
+                    "h: Content-Type":"multipart/form-data",
+                    },
+            files=attachments
+            )
     except:
         traceback.print_exc(file=sys.stdout)
         return False
@@ -136,8 +141,10 @@ def _send_email(request):
         else:
             from_email = from_address
         try:
-            content = create_formatted_email_msg(from_email, subject, body, attachments)
-            email_sent = send_email_mailgun(from_email, to_array, content)
+            #content = create_formatted_email_msg(from_email, subject, body, attachments)
+            formatted_attachments = [('attachment', attached_file) for filename,attached_file in attachments]
+            print formatted_attachments
+            email_sent = send_email_mailgun(from_email, to_array, subject, body, formatted_attachments)
         except:
             traceback.print_exc(file=sys.stdout)
             raise Exception("Both email services failed")

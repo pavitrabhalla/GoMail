@@ -13,6 +13,8 @@ import os, sys
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(BASE_DIR, 'email_service/apps'))
 
+TESTDATA_DIR = os.path.join(BASE_DIR, 'email_service/apps/api/testdata/')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -59,8 +61,9 @@ ROOT_URLCONF = 'email_service.urls'
 
 WSGI_APPLICATION = 'email_service.wsgi.application'
 
+
 # Mailgun Credentials
-MAILGUN_MIME_SEND_URL = "https://api.mailgun.net/v2/sandbox85e18cde4adf4d3b8f4ed689bbb9e1a0.mailgun.org/messages.mime"
+MAILGUN_SEND_URL = "https://api.mailgun.net/v2/sandbox85e18cde4adf4d3b8f4ed689bbb9e1a0.mailgun.org/messages"
 MAILGUN_DEFAULT_FROM_EMAIL = 'Pavitra Bhalla <pavitra@sandbox85e18cde4adf4d3b8f4ed689bbb9e1a0.mailgun.org>'
 MAILGUN_API_KEY = 'key-16a1b7363b2e177454b069bb451ca562'
 
