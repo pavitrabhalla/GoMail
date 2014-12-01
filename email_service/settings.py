@@ -61,11 +61,18 @@ ROOT_URLCONF = 'email_service.urls'
 
 WSGI_APPLICATION = 'email_service.wsgi.application'
 
+FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.TemporaryFileUploadHandler",)
+
+# Sendgrid Credentials
+SG_USERNAME = "pavitrabhalla"
+SG_PASSWORD = "Sendgrid123"
+
 
 # Mailgun Credentials
 MAILGUN_SEND_URL = "https://api.mailgun.net/v2/sandbox85e18cde4adf4d3b8f4ed689bbb9e1a0.mailgun.org/messages"
 MAILGUN_DEFAULT_FROM_EMAIL = 'Pavitra Bhalla <pavitra@sandbox85e18cde4adf4d3b8f4ed689bbb9e1a0.mailgun.org>'
 MAILGUN_API_KEY = 'key-16a1b7363b2e177454b069bb451ca562'
+
 
 # AWS Credentials
 AWS_ACCESS_KEY_ID = "AKIAJ3RFPYCM3HSDJISA"

@@ -18,6 +18,7 @@ from django.template import loader
 from django.conf import settings
 import requests
 import traceback, sys, json
+import sendgrid
 
 def create_formatted_mime(from_address, subject, body, attachments):
     m = MIMEMultipart() 
@@ -77,6 +78,32 @@ def send_email_aws(from_address, to_addresses, content):
         traceback.print_exc(file=sys.stdout)
         return False
 
+def send_email_sendgrid(from_address, to_addresses, subject, body, attachments):
+    try:
+        # CREATE THE SENDGRID MAIL OBJECT
+        #========================================================#
+        sg = sendgrid.SendGridClient(settings.SG_USERNAME, settings.SG_PASSWORD)
+        message = sendgrid.Mail()
+
+        # ENTER THE EMAIL INFORMATION
+        #========================================================#
+        message.set_from(from_address)
+        message.set_subject(subject)
+        message.set_html(body)
+        message.add_to(to_addresses)
+        for filename,attachment in attachments:
+            print attachment.name, attachment.size
+            message.add_attachment(attachment.name, attachment.temporary_file_path())
+
+        # SEND THE MESSAGE
+        #========================================================#
+        status, msg = sg.send(message)
+        print msg
+    except:
+        traceback.print_exc(file=sys.stdout)
+        return False
+    return True
+
 def send_email_mailgun(from_address, to_addresses, subject, body, attachments):
     #to_addresses = ",".join(str(addr) for addr in to_addresses)
     print attachments
@@ -135,7 +162,7 @@ def _send_email(request):
             raise Exception()
     except:
         traceback.print_exc(file=sys.stdout)
-        print "Failing over to Mailgun service"
+        '''print "Failing over to Mailgun service"
         if not from_address:
             from_email = settings.MAILGUN_DEFAULT_FROM_EMAIL
         else:
@@ -146,7 +173,11 @@ def _send_email(request):
             print formatted_attachments
             email_sent = send_email_mailgun(from_email, to_array, subject, body, formatted_attachments)
         except:
-            traceback.print_exc(file=sys.stdout)
+            traceback.print_exc(file=sys.stdout)'''
+        print "Failing over to sendgrid"
+        try:
+            email_sent = send_email_sendgrid(from_address, to_addresses, subject, body, attachments)
+        except:
             raise Exception("Both email services failed")
     if email_sent:
         return True, "Email sent to recipients", HttpCreated
