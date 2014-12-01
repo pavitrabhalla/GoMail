@@ -57,10 +57,10 @@ def create_formatted_email_msg(from_address, subject, body, attachments):
 
         else: 
             msg = MIMEBase(maintype, subtype)
-        msg.set_payload(attached_file.read())
-        # Encode the payload using Base64
-        encoders.encode_base64(msg)
-        # Set the filename parameter
+            msg.set_payload(attached_file.read())
+            # Encode the payload using Base64
+            encoders.encode_base64(msg)
+            # Set the filename parameter
         msg.add_header('Content-Disposition', 'attachment', filename=k)
         m.attach(msg)
     return m
@@ -108,6 +108,7 @@ def _send_email(request):
     try:
         from_address = data.get('from_address')
         to_addresses = data.get('to_addresses')
+        print "From:" + from_address
         if to_addresses:
             to_array = to_addresses.split(' ')
         else:
