@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.conf import settings
 import traceback, sys, json
 from api.helpers import create_formatted_mime, send_email_aws, send_email_sendgrid
+from tastypie.http import *
 
 def _send_email(request):
     try:
@@ -48,6 +49,7 @@ def _send_email(request):
         try:
             email_sent = send_email_sendgrid(from_address, to_addresses, subject, body, attachments)
         except:
+            print traceback.print_exc(file=sys.stdout)
             raise Exception("Both email services failed")
     if email_sent:
         return True, "Email sent to recipients", HttpCreated

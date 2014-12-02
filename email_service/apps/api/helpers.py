@@ -95,12 +95,16 @@ def send_email_sendgrid(from_address, to_addresses, subject, body, attachments):
         # SEND THE MESSAGE
         #========================================================#
         status, msg = sg.send(message)
-        print msg
+        return True
     except:
         traceback.print_exc(file=sys.stdout)
         return False
-    return True
 
+'''
+#This method uses the Mailgun service to send emails. This method is currently not setup to send attachments properly,
+#but otherwise works perfectly.
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
 def send_email_mailgun(from_address, to_addresses, subject, body, attachments):
     #to_addresses = ",".join(str(addr) for addr in to_addresses)
     print attachments
@@ -117,4 +121,4 @@ def send_email_mailgun(from_address, to_addresses, subject, body, attachments):
             )
     except:
         traceback.print_exc(file=sys.stdout)
-        return False
+        return False'''
