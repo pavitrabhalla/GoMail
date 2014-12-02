@@ -58,7 +58,6 @@ class SendEmailTest(ResourceTestCase):
         self.send_email_api_url = settings.API_BASE_URL+"api/v1/email-service/send-email/"
 
 
-
     # -----------------------------------------------------------------------------------------------------------------
     # Test success with AWS and a plaintext body
     # "From" address is the address that is verified with AWS SES, thus the email should be sent successfully via SES, 
@@ -76,7 +75,6 @@ class SendEmailTest(ResourceTestCase):
         self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
 
 
-
     # -----------------------------------------------------------------------------------------------------------------
     # Test success with AWS and HTML formatted string as body
     # "From" address is the address that is verified with AWS SES, thus the email should be sent successfully via SES, 
@@ -92,7 +90,6 @@ class SendEmailTest(ResourceTestCase):
                 'body':self.htmlbody,
                 }
         self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
-
 
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -138,7 +135,6 @@ class SendEmailTest(ResourceTestCase):
         self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
 
 
-
     # -----------------------------------------------------------------------------------------------------------------
     # Test failover to sendgrid with an HTML body
     # 
@@ -159,8 +155,6 @@ class SendEmailTest(ResourceTestCase):
                 'body':self.htmlbody,
                 }
         self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
-
-
 
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -187,3 +181,36 @@ class SendEmailTest(ResourceTestCase):
             )
         print r.text
         self.assertHttpCreated(r)
+
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # Test sending empty field in to_addresses
+    # The service should return a 403 HttpForbidden response with message as "Empty or invalid to_addresses"
+    # -----------------------------------------------------------------------------------------------------------------
+    def test_empty_to_addresses(self):
+        print "Testing empty to_addresses - 403 Forbidden"
+        post_data = {
+                'from_address':self.aws_verified_from_address,
+                'subject':self.subject,
+                'body':self.textbody,
+                }
+        resp = self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data)
+        self.assertEqual(self.deserialize(resp)['message'], "Empty or invalid to_addresses")
+        self.assertHttpForbidden(resp)
+
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # Test sending empty field in from_address
+    # The service should use the default from_address and send the email 
+    # Should return 200 HttpCreated response
+    # -----------------------------------------------------------------------------------------------------------------
+    def test_empty_from_address(self):
+        print "Testing empty from address"
+        post_data = {
+                'to_addresses':self.to_addresses,
+                'subject':self.subject,
+                'body':self.textbody,
+                }
+        self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
+
+

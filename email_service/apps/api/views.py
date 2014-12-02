@@ -7,6 +7,7 @@ import traceback, sys, json
 from api.helpers import create_formatted_mime, send_email_aws, send_email_sendgrid
 from tastypie.http import *
 
+
 #-------------------------------------------------------------------------------------------------------
 # This method implements the logic to accept email parameters received in the request, 
 # do a preliminary check for required parameters,
@@ -16,53 +17,59 @@ from tastypie.http import *
 # If there is an exception, and SES fails, this method tries to send the email
 # via Sendgrid
 #-------------------------------------------------------------------------------------------------------
+
 def _send_email(request):
+
     # Try to load data from request body
     try:
         data = json.loads(request.body)
+
     # If the body is empty, try to load data from POST params.
     # This is useful if the content-type of the request is multipart/form-data.
     except ValueError, e:
         data = request.POST
+    
     # If no data could be decoded from the request, 
     # throw an exception telling it is a bad request. In this case, the API response will return a 400 HttpBadRequest error.
     except:
         traceback.print_exc(file=sys.stdout)
         return False, "Invalid request body", HttpBadRequest
+
     if not data:
         return False, "Invalid request body", HttpBadRequest
 
     try:
-        # Try to a get a from_address from the request data. If a from_address is not provided, use the default from address 
-        # from settings
+            # Try to a get a from_address from the request data. If a from_address is not provided, use the default from address 
+            # from settings
         from_address = data.get('from_address')
         if not from_address:
-            from_address = settings.DEFAULT_FROM_ADDRESS
+            from_address = settings.DEFAULT_FROM_EMAIL
 
-        # Try to get to_addresses from the request 
+            # Try to get to_addresses from the request 
         to_addresses = data.get('to_addresses')
 
-        # Convert the string of to_addresses delimited by single blankspaces to a list
+            # Convert the string of to_addresses delimited by single blankspaces to a list
         if to_addresses:
             to_array = to_addresses.split(' ')
-        # If there are no to_addresses return an error with response code as HttpForbidden
-        # Indicate the server cannot process the request further without valid to_addresses
+
+            # If there are no to_addresses return an error with response code as HttpForbidden
+            # Indicate the server cannot process the request further without valid to_addresses
         else:
             return False, "Empty or invalid to_addresses", HttpForbidden
 
-        # Get a subject for the email from the request
+            # Get a subject for the email from the request
         subject = data.get('subject')
 
-        # Get the body for the email from the request
+            # Get the body for the email from the request
         body = data.get('body')
     except:
-        #print the stacktrace to standard output if there is an error
+        #print the stacktrace to standard output if there is an exception
         traceback.print_exc(file=sys.stdout)
 
-    # Load all files uploaded as part of the request to attachments list variable
+        # Load all files uploaded as part of the request to attachments list variable
     if request.FILES.items():
         attachments = request.FILES.items()
-    #If there are no attchments, create an empty list for attachments
+        #If there are no attchments, create an empty list for attachments
     else:
         attachments = []
 

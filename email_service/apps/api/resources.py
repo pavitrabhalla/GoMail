@@ -4,7 +4,7 @@
 # 
 # Here, we define our REST APIs to different services. Each service is represented by a Resource class, and contains
 # endpoints to sub-services within that service. 
-# ----------------------------------------------------------------------------------------------------------
+
 # Author: Pavitra Bhalla
 # ----------------------------------------------------------------------------------------------------------
 
@@ -40,5 +40,6 @@ class EmailResource(ModelResource):
             #Try sending an email
             success, message, http_status_code = _send_email(request)
         except:
+            #Handle any unhandled exceptions in code and return a user-friendly message
             success, message, http_status_code = False, "Internal server error. Please try again later", HttpForbidden
         return self.create_response(request, {"success":success, "message":message}, http_status_code)
