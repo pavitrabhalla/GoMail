@@ -20,13 +20,13 @@ class SendEmailTest(ResourceTestCase):
         super(SendEmailTest, self).setUp()
 
         # Email address that is verified to send emails via AWS
-        self.aws_verified_from_address = settings.DEFAULT_FROM_ADDRESS
+        self.aws_verified_from_address = settings.DEFAULT_FROM_EMAIL
 
         # Random email address to use as 'From' address
         self.default_from_address = 'randomSender@pbmail.service'
         
         # Email To addresses
-        self.to_addresses = 'pavitrabhalla@gmail.com pavitra@oceanleap.com'
+        self.to_addresses = "pavitrabhalla@gmail.com pavitra@oceanleap.com"
 
         # Email Subject
         self.subject = 'Testing email sending service'
@@ -66,6 +66,7 @@ class SendEmailTest(ResourceTestCase):
     # The service should return a 200 HttpCreated response on success
     # -----------------------------------------------------------------------------------------------------------------
     def test_plaintext_success_aws(self):
+        print "Testing sending plaintext message using AWS"
         post_data = {
                 'from_address':self.aws_verified_from_address,
                 'to_addresses':self.to_addresses,
@@ -83,6 +84,7 @@ class SendEmailTest(ResourceTestCase):
     # The service should return a 200 HttpCreated response on success
     # -----------------------------------------------------------------------------------------------------------------
     def test_html_success_aws(self):
+        print "Testing sending HTML message using AWS"
         post_data = {
                 'from_address':self.aws_verified_from_address,
                 'to_addresses':self.to_addresses,
@@ -100,6 +102,7 @@ class SendEmailTest(ResourceTestCase):
     # The service should return a 200 HttpCreated response on success
     # -----------------------------------------------------------------------------------------------------------------
     def test_attachments_success_aws(self):
+        print "Testing sending attachments with HTML message using AWS"
         r = requests.post(self.send_email_api_url,
             data={"from_address": self.aws_verified_from_address,
                     "to_addresses": self.to_addresses,
@@ -125,6 +128,7 @@ class SendEmailTest(ResourceTestCase):
     # The service should return a 200 HttpCreated response on success
     # -----------------------------------------------------------------------------------------------------------------
     def test_plaintext_failover_to_sendgrid(self):
+        print "Testing sending plaintext message using Sendgrid after AWS throws exception"
         post_data = {
                 'from_address':self.default_from_address,
                 'to_addresses':self.to_addresses,
@@ -147,6 +151,7 @@ class SendEmailTest(ResourceTestCase):
     # The service should return a 200 HttpCreated response on success
     # -----------------------------------------------------------------------------------------------------------------
     def test_html_failover_to_sendgrid(self):
+        print "Testing sending HTML message using Sendgrid after AWS throws exception"
         post_data = {
                 'from_address':self.default_from_address,
                 'to_addresses':self.to_addresses,
@@ -169,24 +174,16 @@ class SendEmailTest(ResourceTestCase):
     # Sendgrid should be able to send the email successfully through the given "From" alias address
     # The service should return a 200 HttpCreated response on success
     # -----------------------------------------------------------------------------------------------------------------
-    def test_html_failover_to_sendgrid(self):
-        post_data = {
-                'from_address':self.default_from_address,
-                'to_addresses':self.to_addresses,
-                'subject':self.subject,
-                'body':self.htmlbody,
-                'h: Content-Type':'multipart/form-data',
+    def test_attachments_failover_to_sendgrid(self):
+        print "Testing sending attachments with message using Sendgrid after AWS throws exception"
+        r = requests.post(self.send_email_api_url,
+            data={"from_address": self.default_from_address,
+                    "to_addresses": self.to_addresses,
+                    "subject":self.subject,
+                    "body":self.attachment_body,
+                    "h: Content-Type":"multipart/form-data",
                     },
             files=self.attachments,
             )
-        self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
-
-
-
-
-
-
-
-
-
-
+        print r.text
+        self.assertHttpCreated(r)
