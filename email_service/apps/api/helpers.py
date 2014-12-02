@@ -13,63 +13,8 @@ import boto
 import boto.exception 
 from boto.ses.connection import SESConnection 
 from django.conf import settings
-import requests
 import traceback, sys, json
 import sendgrid
-
-
-
-# ----------------------------------------------------------------------------------------------------------
-# This method can be used to create a MIMEMultipart email object with html data and file attachments.
-#
-# ----------------------------------------------------------------------------------------------------------
-def create_formatted_mime(from_address, subject, body, attachments):
-    m = MIMEMultipart() 
-
-    #Email subject
-    m['Subject'] = subject
-
-    #Email from address
-    m['From'] = from_address
-
-    #Email text/html body
-    part = MIMEText(body, 'html') 
-    m.attach(part)
-
-    #Attachments
-    for filename,attached_file in attachments:
-
-        #Guess the type of file from its extension
-        ctype, encoding = mimetypes.guess_type(attached_file.name)
-        if ctype is None or encoding is not None:
-            # No guess could be made, or the file is encoded (compressed), so
-            # use a generic bag-of-bits type.
-            ctype = 'application/octet-stream'
-        maintype, subtype = ctype.split('/', 1)
-
-        if maintype == 'text':
-            # Note: we should handle calculating the charset
-            msg = MIMEText(attached_file.read(), _subtype=subtype)
-
-        elif maintype == 'image': 
-            msg = MIMEImage(attached_file.read(), _subtype=subtype)
-
-        elif maintype == 'audio': 
-            msg = MIMEAudio(attached_file.read(), _subtype=subtype)
-
-        elif maintype == 'application':
-            msg = MIMEApplication(attached_file.read(), _subtype=subtype)
-
-        else: 
-            msg = MIMEBase(maintype, subtype)
-            msg.set_payload(attached_file.read())
-            # Encode the payload using Base64
-            encoders.encode_base64(msg)
-            # Set the filename parameter
-        msg.add_header('Content-Disposition', 'attachment', filename=filename)
-        m.attach(msg)
-    return m
-
 
 
 # ----------------------------------------------------------------------------------------------------------
@@ -127,25 +72,53 @@ def send_email_sendgrid(from_address, to_addresses, subject, body, attachments):
 
 
 
-'''
-#This method uses the Mailgun service to send emails. This method is currently not setup to send attachments properly,
-#but otherwise works perfectly.
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
-def send_email_mailgun(from_address, to_addresses, subject, body, attachments):
-    #to_addresses = ",".join(str(addr) for addr in to_addresses)
-    print attachments
-    try:
-        return requests.post(settings.MAILGUN_SEND_URL,
-            auth=("api", settings.MAILGUN_API_KEY),
-            data={"from": from_address,
-                    "to": to_addresses,
-                    "subject":subject,
-                    "html":body,
-                    "h: Content-Type":"multipart/form-data",
-                    },
-            files=attachments
-            )
-    except:
-        traceback.print_exc(file=sys.stdout)
-        return False'''
+# ----------------------------------------------------------------------------------------------------------
+# This method can be used to create a MIMEMultipart email object with html data and file attachments.
+#
+# ----------------------------------------------------------------------------------------------------------
+def create_formatted_mime(from_address, subject, body, attachments):
+    m = MIMEMultipart() 
+
+    #Email subject
+    m['Subject'] = subject
+
+    #Email from address
+    m['From'] = from_address
+
+    #Email text/html body
+    part = MIMEText(body, 'html') 
+    m.attach(part)
+
+    #Attachments
+    for filename,attached_file in attachments:
+
+        #Guess the type of file from its extension
+        ctype, encoding = mimetypes.guess_type(attached_file.name)
+        if ctype is None or encoding is not None:
+            # No guess could be made, or the file is encoded (compressed), so
+            # use a generic bag-of-bits type.
+            ctype = 'application/octet-stream'
+        maintype, subtype = ctype.split('/', 1)
+
+        if maintype == 'text':
+            # Note: we should handle calculating the charset
+            msg = MIMEText(attached_file.read(), _subtype=subtype)
+
+        elif maintype == 'image': 
+            msg = MIMEImage(attached_file.read(), _subtype=subtype)
+
+        elif maintype == 'audio': 
+            msg = MIMEAudio(attached_file.read(), _subtype=subtype)
+
+        elif maintype == 'application':
+            msg = MIMEApplication(attached_file.read(), _subtype=subtype)
+
+        else: 
+            msg = MIMEBase(maintype, subtype)
+            msg.set_payload(attached_file.read())
+            # Encode the payload using Base64
+            encoders.encode_base64(msg)
+            # Set the filename parameter
+        msg.add_header('Content-Disposition', 'attachment', filename=filename)
+        m.attach(msg)
+    return m
