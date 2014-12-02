@@ -11,8 +11,8 @@ GoMail provides an abstraction between two different service providers, making s
 
 <h4>Take a test drive</h4>
 
-Fill in the variables below - <br>
-youremailaddress - Replace with an email address for which you can check inbox <br>
+<h5>Fill in the variables below -</h5>
+youremailaddress - Replace with an email address for which you can check inbox
 pathtofile - To test sending an attachment, provide the full path to a local file
 
 <pre><code>curl -X POST /
@@ -21,9 +21,29 @@ pathtofile - To test sending an attachment, provide the full path to a local fil
       -F "to_addresses=<b>&lt;youremailaddress&gt;</b>" /
       -F "subject=Testing my email service" /
       -F "body=Hi, this is a sample email from my email service" /
-      -F "attachment=@&lt;pathtofile&gt;" /
+      -F "my_attachment=@&lt;pathtofile&gt;" /
     "http://ec2-54-67-40-84.us-west-1.compute.amazonaws.com:8080/api/v1/email-service/send-email/"
       </code></pre>
+
+<h5>API</h5>
+<b>&#47;api&#47;v1&#47;email&#45;service&#47;send&#45;mail&#47;</b>
+<h6>Request Parameters:</h6>
+1. <u>Content&#45;Type</u>: Use "application/json", if sending a JSON body without attachments. To send attachments, use "multipart/form-data"
+2. <u>from&#95;address</u>(String): A single email adrress as string. This will be the "from" address displayed in the email. If this is not passed, a default address will be used to send the email. 
+3. <u>to&#95;addresses</u>(String): Multiple recipient email addresses delimited by a space. This is a required field.
+4. <u>subject</u>(String): Subject for the email. Defaults to empty.
+5. <u>body</u>(String): Accepts plain/text or HTML formatted string. This will be the body of the email.
+6. Attachments: For sending attachments, use the name of the file as the key and the path to the file as its value. You can send multiple attachments along with the email. Maximum size allowed for all attachments together is 7MB.
+
+<h6>Response</h6>
+<pre>Returns an HTTP response with appropriate HTTP response codes - 
+Success codes: 200 HTTP CREATED
+Failure codes: 400 BAD REQUEST (The request is malformed, or the server could not decode the body of the request)
+               403 FORBIDDEN (The server understands the request, but cannot do any further processing)
+               500 INTERNAL SERVER ERROR (An unexpected error occured internally)</pre>
+<h7>Response body (JSON):</h7>
+<pre>      {"success": &lt;True/False for success and failure respectively&gt;
+      "message": &lt;Response message from server&gt;}</pre>
 
 <h4>How does it work</h4>
 GoMail uses Amazon Web Services-Simple Email Service (AWS SES) and SendGrid as the two email service providers. These services are highly reliable, provide extensive developer support and are easy to integrate with Python. GoMail chooses AWS SES as the default service to send email, but if it fails or SES goes down, it switches to Sendgrid to fulfill the request.
