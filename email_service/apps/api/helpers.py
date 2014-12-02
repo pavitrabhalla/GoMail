@@ -100,6 +100,8 @@ def send_email_sendgrid(from_address, to_addresses, subject, body, attachments):
         traceback.print_exc(file=sys.stdout)
         return False
 
+
+
 '''
 #This method uses the Mailgun service to send emails. This method is currently not setup to send attachments properly,
 #but otherwise works perfectly.
