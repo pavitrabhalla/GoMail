@@ -66,23 +66,22 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.TemporaryFileUploadHand
 
 
 # Default Email Settings
-DEFAULT_FROM_EMAIL = 'Pavitra Bhalla <pavitrabhalla@gmail.com>' 
+DEFAULT_FROM_EMAIL = '<default_from_email>'
 
 # Sendgrid Credentials
-SG_USERNAME = "pavitrabhalla"
-SG_PASSWORD = "Sendgrid123"
+SG_USERNAME = '<sendgrid_username>'
+SG_PASSWORD = '<sendgrid_password>'
 
 
 # Mailgun Credentials
-MAILGUN_SEND_URL = "https://api.mailgun.net/v2/sandbox85e18cde4adf4d3b8f4ed689bbb9e1a0.mailgun.org/messages"
-MAILGUN_API_KEY = 'key-16a1b7363b2e177454b069bb451ca562'
+MAILGUN_SEND_URL = '<Mailgun_send_url>'
+MAILGUN_API_KEY = '<Mailgun_api_key>'
 
 
 # AWS Credentials
-AWS_ACCESS_KEY_ID = "AKIAJ3RFPYCM3HSDJISA"
-AWS_SECRET_ACCESS_KEY = "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"
-AWS_SES_REGION = "us-east-1"
-
+AWS_ACCESS_KEY_ID = "<AWS_ACCESS_KEY_ID>"
+AWS_SECRET_ACCESS_KEY = "<AWS_SECRET_KEY>"
+AWS_SES_REGION = "<AWS_SES_REGION>"
 
 
 # Database
@@ -113,3 +112,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+try:$
+    from local_settings import *$
+except ImportError:$
+    pass$
+
