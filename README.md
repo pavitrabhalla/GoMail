@@ -1,4 +1,4 @@
-email_service
+GoMail
 =============
 
 <h3>A reliable REST API based email service to send emails</h3>
@@ -7,7 +7,7 @@ email_service
 Email is the most common way businesses interact with their customers to keep them engaged, interested and informed. Today, businesses are highly relied upon email service providers for doing the job right, but still there are events of failure that can lead to a huge loss in customer retention, money and efforts.
 
 <h4>What does this do</h4>
-This email service provides an abstraction between two different service providers, making sure that if one fails, the service can failover to the other. This decreases the chances of failure in sending emails significantly. 
+GoMail provides an abstraction between two different service providers, making sure that if one fails, the service can failover to the other. This decreases the chances of failure in sending emails significantly. 
 
 <h4>Take a test drive</h4>
 <pre><code>curl -X POST /
@@ -21,7 +21,9 @@ This email service provides an abstraction between two different service provide
       </code></pre>
 
 <h4>How does it work</h4>
-The service uses Amazon Web Services-Simple Email Service (AWS SES) and SendGrid as the two email service providers. These are highly reliable, provide extensive developer support and are easy to integrate with Python. 
+GoMail uses Amazon Web Services-Simple Email Service (AWS SES) and SendGrid as the two email service providers. These services are highly reliable, provide extensive developer support and are easy to integrate with Python. GoMail chooses AWS SES as the default service to send email, but if it fails or SES goes down, it switches to Sendgrid to fulfill the request.
+
+
 
 
 
