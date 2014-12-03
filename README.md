@@ -40,7 +40,9 @@ pathtofile - To test sending an attachment, provide the full path to a local fil
 Success codes: 200 HTTP CREATED
 Failure codes: 400 BAD REQUEST (The request is malformed, or the server could not decode the body of the request)
                403 FORBIDDEN (The server understands the request, but cannot do any further processing)
-               500 INTERNAL SERVER ERROR (An unexpected error occured internally)</pre>
+               500 INTERNAL SERVER ERROR (An unexpected error occured internally)
+               501 NOT IMPLEMENTED (Malformed url)
+               405 METHOD NOT ALLOWED (Invalid HTTP method)</pre>
 <h7>Response body (JSON):</h7>
 <pre>      {"success": &lt;True/False for success and failure respectively&gt;
       "message": &lt;Response message from server&gt;}</pre>
