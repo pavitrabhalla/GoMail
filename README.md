@@ -7,7 +7,7 @@ GoMail
 Email is the most common way businesses interact with their customers to keep them engaged, interested and informed. Today, businesses are highly relied upon email service providers for doing the job right, but still there are events of failure that can lead to a huge loss in customer retention, money and efforts.
 
 <h4>What does this do</h4>
-GoMail provides an abstraction between two different service providers, making sure that if one fails, the service can failover to the other. This decreases the chances of failure in sending emails significantly. 
+GoMail uses a failover architecture to guarantee that emails are sent and never dropped. It provides an abstraction between two different service providers, making sure that if one fails, the service can failover to the other. This decreases the chances of failure in sending emails significantly.
 
 <h4>Take a test drive</h4>
 This project is hosted on an AWS EC2 instance, so you can easily try it out.<br>
