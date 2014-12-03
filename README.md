@@ -1,7 +1,7 @@
 GoMail
 =============
 
-<h3>A reliable REST API based email service backend to send emails</h3>
+<h3>A reliable RESTful email service backend to send emails</h3>
 
 <h4>Why do you want this</h4>
 Email is the most common way businesses interact with their customers to keep them engaged, interested and informed. Today, businesses are highly relied upon email service providers for doing the job right, but still there are events of failure that can lead to a huge loss in customer retention, money and efforts.
