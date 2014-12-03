@@ -34,7 +34,6 @@ def _send_email(request):
     except:
         traceback.print_exc(file=sys.stdout)
         return False, "Invalid request body", HttpBadRequest
-
     if not data:
         return False, "Invalid request body", HttpBadRequest
 

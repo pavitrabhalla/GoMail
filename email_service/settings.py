@@ -67,6 +67,7 @@ FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.TemporaryFileUploadHand
 
 # Default Email Settings
 DEFAULT_FROM_EMAIL = '<default_from_email>'
+DEFAULT_TO_EMAILS = '<default_to_emails>'
 
 # Sendgrid Credentials
 SG_USERNAME = '<sendgrid_username>'
@@ -83,6 +84,8 @@ AWS_ACCESS_KEY_ID = "<AWS_ACCESS_KEY_ID>"
 AWS_SECRET_ACCESS_KEY = "<AWS_SECRET_KEY>"
 AWS_SES_REGION = "<AWS_SES_REGION>"
 
+#API Base URL
+API_BASE_URL = "<BASE_URL_TO_HOSTED_APPLICATION>"
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

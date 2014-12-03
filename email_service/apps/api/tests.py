@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test.client import Client
 import requests
+import sys
 
 
 # -------------------------------------------------------------------------
@@ -18,7 +19,7 @@ class SendEmailTest(ResourceTestCase):
     # Setup data before running tests
     def setUp(self):
         super(SendEmailTest, self).setUp()
-
+        
         # Email address that is verified to send emails via AWS
         self.aws_verified_from_address = settings.DEFAULT_FROM_EMAIL
 
@@ -26,7 +27,7 @@ class SendEmailTest(ResourceTestCase):
         self.default_from_address = 'randomSender@pbmail.service'
         
         # Email To addresses
-        self.to_addresses = "pavitrabhalla@gmail.com pavitra@oceanleap.com"
+        self.to_addresses = settings.DEFAULT_TO_EMAILS
 
         # Email Subject
         self.subject = 'Testing email sending service'
@@ -212,5 +213,61 @@ class SendEmailTest(ResourceTestCase):
                 'body':self.textbody,
                 }
         self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
+
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # Test sending empty field in subject
+    # The service should send the email with an empty subject
+    # Should return 200 HttpCreated response
+    # -----------------------------------------------------------------------------------------------------------------
+    def test_empty_subject(self):
+        print "Testing empty subject"
+        post_data = {'from_address':self.default_from_address,
+                'to_addresses':self.to_addresses,
+                'body':self.textbody,
+                }
+        self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
+
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # Test sending empty body
+    # The service should send the email with an empty body
+    # Should return 200 HttpCreated response
+    # -----------------------------------------------------------------------------------------------------------------
+    def test_empty_subject(self):
+        print "Testing empty subject"
+        post_data = {'from_address':self.default_from_address,
+                'to_addresses':self.to_addresses,
+                'subject':self.subject,
+                }
+        self.assertHttpCreated(self.api_client.post('/api/v1/email-service/send-email/', format='json', data=post_data))
+
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # Test an incorrect Http method
+    # Send a GET instead of POST
+    # Should return 405 Method not allowed response
+    # -----------------------------------------------------------------------------------------------------------------
+    def test_incorrect_http_method(self):
+        print "Testing empty subject"
+        post_data = {'from_address':self.default_from_address,
+                'to_addresses':self.to_addresses,
+                'body':self.textbody,
+                }
+        self.assertHttpMethodNotAllowed(self.api_client.get('/api/v1/email-service/send-email/', format='json', data=post_data))
+
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # Test a malformed url.
+    # Changed the endpoint to send-emai
+    # Should return 501 Http Not Implemented Error response
+    # -----------------------------------------------------------------------------------------------------------------
+    def test_malformed_url(self):
+        print "Testing malformed url"
+        post_data = {'from_address':self.default_from_address,
+                'to_addresses':self.to_addresses,
+                'body':self.textbody,
+                }
+        self.assertHttpNotImplemented(self.api_client.post('/api/v1/email-service/send-emai/', format='json', data=post_data))
 
 
