@@ -29,7 +29,7 @@ pathtofile - To test sending an attachment, provide the full path to a local fil
 <b>&#47;api&#47;v1&#47;email&#45;service&#47;send&#45;mail&#47;</b>
 <h6>Request Parameters:</h6>
 1. <u>Content&#45;Type</u>: Use "application/json", if sending a JSON body without attachments. To send attachments, use "multipart/form-data"
-2. <u>from&#95;address</u>(String): A single email adrress as string. This will be the "from" address displayed in the email. If this is not passed, a default address will be used to send the email. 
+2. <u>from&#95;address</u>(String): A single email addrress as string. This will be the "from" address displayed in the email. If this is not passed, a default address will be used to send the email. 
 3. <u>to&#95;addresses</u>(String): Multiple recipient email addresses delimited by a space. This is a required field.
 4. <u>subject</u>(String): Subject for the email. Defaults to empty.
 5. <u>body</u>(String): Accepts plain/text or HTML formatted string. This will be the body of the email.
