@@ -22,7 +22,7 @@ pathtofile - To test sending an attachment, provide the full path to a local fil
       -F "to_addresses=<b>&lt;recipientaddress&gt;</b>" \
       -F "subject=Testing my email service" \
       -F "body=Hi, this is a sample email from my email service" \
-      -F "my_attachment=@&lt;pathtofile&gt;" \
+      -F "my_attachment=@&lt;<b>pathtofile</b>&gt;" \
     "http://ec2-54-67-40-84.us-west-1.compute.amazonaws.com:8080/api/v1/email-service/send-email/"
       </code></pre>
 
