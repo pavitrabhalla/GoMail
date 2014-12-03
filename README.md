@@ -72,7 +72,7 @@ The service is built using Python and Django. This is mainly because I have been
 <h4>Build your project</h4>
 1. Download the source code from github, and go into the root directory of the project
 2. On unix systems, run - <code>pip install -r requirements/requirements.txt</code>. This will install all the required packages for the project.
-3. Setup your accounts on Sendgrid and AWS. Also, verify your email address with AWS. You can use this email address as the DEFAULT&#95;FROM&#95;EMAIL in your settings.py, as shown below.
+3. Signup for Sendgrid and AWS SES. Also, verify your email address with AWS. You can use this email address as the DEFAULT&#95;FROM&#95;EMAIL in your settings.py, as shown below.
 4. Modify the following variables in settings.py with your credentials -
 <pre><code>&#32;&#32;&#32;&#32;&#35;Default Email Settings
 DEFAULT&#95;FROM&#95;EMAIL = &#39;&lt;default&#95;from&#95;email&gt;&#39;
