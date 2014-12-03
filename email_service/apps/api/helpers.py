@@ -78,11 +78,7 @@ def send_email_sendgrid(from_address, to_addresses, subject, body, attachments):
 # ----------------------------------------------------------------------------------------------------------
 def create_formatted_mime(from_address, subject, body, attachments):
     m = MIMEMultipart() 
-
-    #Email subject
     m['Subject'] = subject
-
-    #Email from address
     m['From'] = from_address
 
     #Email text/html body
@@ -91,7 +87,6 @@ def create_formatted_mime(from_address, subject, body, attachments):
 
     #Attachments
     for filename,attached_file in attachments:
-
         #Guess the type of file from its extension
         ctype, encoding = mimetypes.guess_type(attached_file.name)
         if ctype is None or encoding is not None:
@@ -103,16 +98,12 @@ def create_formatted_mime(from_address, subject, body, attachments):
         if maintype == 'text':
             # Note: we should handle calculating the charset
             msg = MIMEText(attached_file.read(), _subtype=subtype)
-
         elif maintype == 'image': 
             msg = MIMEImage(attached_file.read(), _subtype=subtype)
-
         elif maintype == 'audio': 
             msg = MIMEAudio(attached_file.read(), _subtype=subtype)
-
         elif maintype == 'application':
             msg = MIMEApplication(attached_file.read(), _subtype=subtype)
-
         else: 
             msg = MIMEBase(maintype, subtype)
             msg.set_payload(attached_file.read())
