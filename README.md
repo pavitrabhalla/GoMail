@@ -12,13 +12,14 @@ GoMail provides an abstraction between two different service providers, making s
 <h4>Take a test drive</h4>
 This project is hosted on an AWS EC2 instance, so you can easily try it out.<br>
 <h5>Fill in the variables below and execute the curl from your terminal -</h5>
-youremailaddress - Replace with an email address for which you can check inbox <br>
+senderaddress - Replace with an email address you want to use as the "from" address <br>
+recipientaddress - Replace with an email address you want to send the email to <br>
 pathtofile - To test sending an attachment, provide the full path to a local file
 
 <pre><code>curl -X POST \
       -H "Content-Type: multipart/form-data" \
-      -F "from_address=testEmail@testem.ail" \
-      -F "to_addresses=<b>&lt;youremailaddress&gt;</b>" \
+      -F "from_address=<b>&lt;senderaddress&gt;</b>" \
+      -F "to_addresses=<b>&lt;recipientaddress&gt;</b>" \
       -F "subject=Testing my email service" \
       -F "body=Hi, this is a sample email from my email service" \
       -F "my_attachment=@&lt;pathtofile&gt;" \
@@ -53,7 +54,7 @@ GoMail uses Amazon Web Services-Simple Email Service (AWS SES) and SendGrid as t
 <h4>Under the hood</h4>
 The service is built using Python and Django. This is mainly because I have been working with this stack at my current job for about a year now. Tastypie is used as the webservice API framework with django. It provides a convenient, yet powerful and highly customizable, abstraction for creating REST-style interfaces. 
 
-<h4>What more can be done</h4>
+<h4>Potential future additions to GoMail</h4>
 <h5>Functional</h5>
 1. Handling CC and BCC recipients
 2. Adding authentication, authorization for API usage
