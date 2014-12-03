@@ -10,18 +10,18 @@ Email is the most common way businesses interact with their customers to keep th
 GoMail provides an abstraction between two different service providers, making sure that if one fails, the service can failover to the other. This decreases the chances of failure in sending emails significantly. 
 
 <h4>Take a test drive</h4>
-
-<h5>Fill in the variables below -</h5>
-youremailaddress - Replace with an email address for which you can check inbox
+This project is hosted on an AWS EC2 instance, so you can easily try it out.<br>
+<h5>Fill in the variables below and execute the curl from your terminal -</h5>
+youremailaddress - Replace with an email address for which you can check inbox <br>
 pathtofile - To test sending an attachment, provide the full path to a local file
 
-<pre><code>curl -X POST /
-      -H "Content-Type: multipart/form-data" /
-      -F "from_address=testEmail@testem.ail" /
-      -F "to_addresses=<b>&lt;youremailaddress&gt;</b>" /
-      -F "subject=Testing my email service" /
-      -F "body=Hi, this is a sample email from my email service" /
-      -F "my_attachment=@&lt;pathtofile&gt;" /
+<pre><code>curl -X POST \
+      -H "Content-Type: multipart/form-data" \
+      -F "from_address=testEmail@testem.ail" \
+      -F "to_addresses=<b>&lt;youremailaddress&gt;</b>" \
+      -F "subject=Testing my email service" \
+      -F "body=Hi, this is a sample email from my email service" \
+      -F "my_attachment=@&lt;pathtofile&gt;" \
     "http://ec2-54-67-40-84.us-west-1.compute.amazonaws.com:8080/api/v1/email-service/send-email/"
       </code></pre>
 
