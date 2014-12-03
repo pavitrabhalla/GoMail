@@ -55,16 +55,17 @@ The service is built using Python and Django. This is mainly because I have been
 <h5>Functional</h5>
 1. Handling CC and BCC recipients
 2. Adding authentication, authorization for API usage
-2. API to add a default signature for a "to" address
-3. API to get mail delivery status
-4. Adding recipient group for a "from" address to send mass emails frequently
-5. Upload a csv for list of recipients
+3. API to add a default signature for a "to" address
+4. API to get mail delivery status
+5. Adding recipient group for a "from" address to send mass emails frequently
+6. Upload a csv for list of recipients
 
-<h5>Architectural</h5>
+<h5>Internal, Design and Architecture</h5>
 1. Add verbose logging
-2. Add users model, that implements authentication, control and access rights
-2. Storing events in database, along with the status of delivery
-3. Adding detailed error codes and publishing it to the API documentation
+2. Preliminary checks on uploaded files for size and malware content.
+3. Add users model, that implements authentication, control and access rights
+4. Storing events in database, along with the status of delivery
+5. Adding detailed error codes and publishing it to the API documentation
 
 <h4>Build your project</h4>
 1. Download the source code from github, and go into the root directory of the project
