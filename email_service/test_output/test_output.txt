@@ -1,0 +1,93 @@
+Creating test database for alias 'default'...
+Testing sending attachments with message using Sendgrid after AWS throws exception
+{"message": "Email sent to recipients", "success": true}
+Testing sending attachments with HTML message using AWS
+{"message": "Email sent to recipients", "success": true}
+Testing empty from address
+Trying to send email via Amazon SES
+Testing empty subject
+Trying to send email via Amazon SES
+Traceback (most recent call last):
+  File "/home/bitnami/email_service/email_service/apps/api/helpers.py", line 36, in send_email_aws
+    r = conn.send_raw_email(source=from_address, raw_message=content.as_string(), destinations=to_addresses)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 318, in send_raw_email
+    return self._make_request('SendRawEmail', params)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 114, in _make_request
+    self._handle_error(response, body)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 172, in _handle_error
+    raise ExceptionToRaise(response.status, exc_reason, body)
+SESAddressNotVerifiedError: SESAddressNotVerifiedError: 400 Email address is not verified.
+<ErrorResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>MessageRejected</Code>
+    <Message>Email address is not verified.</Message>
+  </Error>
+  <RequestId>5ecdcfb5-7a86-11e4-a7b0-f5f09f4d1ef1</RequestId>
+</ErrorResponse>
+
+Traceback (most recent call last):
+  File "/home/bitnami/email_service/email_service/apps/api/views.py", line 87, in _send_email
+    raise Exception()
+Exception
+Failing over to sendgrid
+Testing empty to_addresses - 403 Forbidden
+Testing sending HTML message using Sendgrid after AWS throws exception
+Trying to send email via Amazon SES
+Traceback (most recent call last):
+  File "/home/bitnami/email_service/email_service/apps/api/helpers.py", line 36, in send_email_aws
+    r = conn.send_raw_email(source=from_address, raw_message=content.as_string(), destinations=to_addresses)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 318, in send_raw_email
+    return self._make_request('SendRawEmail', params)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 114, in _make_request
+    self._handle_error(response, body)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 172, in _handle_error
+    raise ExceptionToRaise(response.status, exc_reason, body)
+SESAddressNotVerifiedError: SESAddressNotVerifiedError: 400 Email address is not verified.
+<ErrorResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>MessageRejected</Code>
+    <Message>Email address is not verified.</Message>
+  </Error>
+  <RequestId>5f20a9fa-7a86-11e4-b466-91142a8f3eb6</RequestId>
+</ErrorResponse>
+
+Traceback (most recent call last):
+  File "/home/bitnami/email_service/email_service/apps/api/views.py", line 87, in _send_email
+    raise Exception()
+Exception
+Failing over to sendgrid
+Testing sending HTML message using AWS
+Trying to send email via Amazon SES
+Testing empty subject
+Testing malformed url
+Testing sending plaintext message using Sendgrid after AWS throws exception
+Trying to send email via Amazon SES
+Traceback (most recent call last):
+  File "/home/bitnami/email_service/email_service/apps/api/helpers.py", line 36, in send_email_aws
+    r = conn.send_raw_email(source=from_address, raw_message=content.as_string(), destinations=to_addresses)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 318, in send_raw_email
+    return self._make_request('SendRawEmail', params)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 114, in _make_request
+    self._handle_error(response, body)
+  File "/opt/bitnami/python/lib/python2.7/site-packages/boto-2.6.0-py2.7.egg/boto/ses/connection.py", line 172, in _handle_error
+    raise ExceptionToRaise(response.status, exc_reason, body)
+SESAddressNotVerifiedError: SESAddressNotVerifiedError: 400 Email address is not verified.
+<ErrorResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>MessageRejected</Code>
+    <Message>Email address is not verified.</Message>
+  </Error>
+  <RequestId>5fc4b284-7a86-11e4-aa05-df8bce1ddab7</RequestId>
+</ErrorResponse>
+
+Traceback (most recent call last):
+  File "/home/bitnami/email_service/email_service/apps/api/views.py", line 87, in _send_email
+    raise Exception()
+Exception
+Failing over to sendgrid
+Testing sending plaintext message using AWS
+Trying to send email via Amazon SES
+Destroying test database for alias 'default'...
