@@ -74,6 +74,7 @@ The service is built using Python and Django. This is mainly because I have been
 4. Modify the following variables in settings.py with your credentials -
 <pre><code>&#32;&#32;&#32;&#32;&#35;Default Email Settings
 DEFAULT&#95;FROM&#95;EMAIL = &#39;&lt;default&#95;from&#95;email&gt;&#39;
+DEFAULT&#95;TO&#95;EMAILS = &#39;&lt;default to email addresses delimited by a single blankspace&gt;&#39;
 &#32;&#32;&#32;&#32;&#35;Sendgrid Credentials
 SG&#95;USERNAME = &#39;&lt;sendgrid&#95;username&gt;&#39;
 SG&#95;PASSWORD = &#39;&lt;sendgrid&#95;password&gt;&#39;
