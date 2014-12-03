@@ -83,8 +83,11 @@ AWS&#95;ACCESS&#95;KEY&#95;ID = &#39;&lt;AWS&#95;ACCESS&#95;KEY&#95;ID&gt;&#39;
 AWS&#95;SECRET&#95;ACCESS&#95;KEY = &#39;&lt;AWS&#95;SECRET&#95;KEY&gt;&#39;
 AWS&#95;SES&#95;REGION = &#39;&lt;AWS&#95;SES&#95;REGION&gt;&#39;
 &#32;&#32;&#32;&#32;&#35;API Base URL
-API&#95;BASE&#95;URL = &lt;Base url to where you want to host your application&gt;</code></pre>
+API&#95;BASE&#95;URL = &lt;Base url to where your application is hosted&gt;</code></pre>
 
+<h4>Run the test suite</h4>
+Once you have setup your accounts, and changed the settings, run the test suite and check your inbox at the default "to" addresses. This is how you can run the tests -<pre>
+<code> ./manage.py test api </code></pre>
 <h4>Me</h4>
 You can find my Resume here - <a>http://bit.ly/1ET4En3</a>
 
